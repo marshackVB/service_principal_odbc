@@ -61,6 +61,7 @@ class CreateServicePrincipalUser():
                     }
                 ],
 
+        See documentation at https://docs.microsoft.com/en-us/azure/databricks/tutorials/run-jobs-with-service-principals
         """
 
         create_sp_post = {"schemas":[
@@ -94,6 +95,8 @@ class CreateServicePrincipalUser():
         The service princiapl user to launch Jobs, etc. It will also allow the Service Principal user
         to generate a PAT token using the PAT token API. The PAT token can then be used to authenticate
         to the JDBC/ODBC connector.
+
+        See documentation at https://docs.microsoft.com/en-us/azure/databricks/dev-tools/api/latest/aad/service-prin-aad-token
         """
 
         url = f'https://login.microsoftonline.com/{self.tenant_id}/oauth2/token' 
@@ -117,6 +120,8 @@ class CreateServicePrincipalUser():
         """
         Get a PAT token using the Token API. Authentication is handled by the AD token previously
         generated
+
+        See documentation at https://docs.databricks.com/dev-tools/api/latest/tokens.html
         """
 
         self.get_ad_token()
@@ -138,6 +143,8 @@ class CreateServicePrincipalUser():
     def list_principals(self, pat_token, display_name=None):
         """
         Get all Service Principal users in a workspace
+
+        See documentation here https://docs.databricks.com/dev-tools/api/latest/scim/index.html
         """
 
         headers = {
@@ -166,6 +173,8 @@ class CreateServicePrincipalUser():
     def remove_sp_from_workspace(self, pat_token, id=None):
         """
         Remove Service Principal users from a workspace
+
+        See documentation at https://docs.databricks.com/dev-tools/api/latest/scim/scim-users.html#delete-user-by-id
         """
 
         if id:
@@ -187,6 +196,8 @@ class CreateServicePrincipalUser():
         """
         Get all group and group ids from workspace. In order to add a user to a group using
         the SCIM API, you want source the Group's ID from the workspace.
+
+        See documentation at https://docs.databricks.com/dev-tools/api/latest/scim/scim-groups.html
         """
 
         url = f'{self.host}/api/2.0/preview/scim/v2/Groups'
@@ -206,6 +217,8 @@ class CreateServicePrincipalUser():
     def list_pat_tokens(self):
         """
         List all PAT tokens in the workspace
+
+        See documentation at https://docs.databricks.com/dev-tools/api/latest/tokens.html#list
         """
 
         if not self.ad_token:
@@ -218,6 +231,9 @@ class CreateServicePrincipalUser():
                 }
 
         return requests.get(url, headers=headers).json()
+
+    def __str__(self):
+        return '\n'.join(['{key}: {value}'.format(key=key, value=self.__dict__.get(key)) for key in self.__dict__])
 
 
 
